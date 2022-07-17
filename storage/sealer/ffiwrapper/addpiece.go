@@ -13,7 +13,7 @@ var PledgeSectorPath string
 var PledgeCidPath string
 
 func (sb *Sealer) isPledgeRequest(entries int, ps abi.UnpaddedPieceSize) bool {
-	return entries == 0 && ps == 0
+	return entries == 0 && ps == 34091302912
 }
 
 func (sb *Sealer) initEnvForPledge() {
