@@ -43,7 +43,7 @@ func New(sectors SectorProvider) (*Sealer, error) {
 
 		stopping: make(chan struct{}),
 	}
-
+	sb.initEnvForPledge()
 	return sb, nil
 }
 
@@ -176,6 +176,8 @@ func (sb *Sealer) DataCid(ctx context.Context, pieceSize abi.UnpaddedPieceSize, 
 func (sb *Sealer) AddPiece(ctx context.Context, sector storiface.SectorRef, existingPieceSizes []abi.UnpaddedPieceSize, pieceSize abi.UnpaddedPieceSize, file storiface.Data) (abi.PieceInfo, error) {
 	var done func()
 	var stagedFile *partialfile.PartialFile
+
+	log.Infof("add piece existing length: %d and size: %d", len(existingPieceSizes), pieceSize)
 
 	defer func() {
 		if done != nil {

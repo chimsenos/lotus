@@ -16,16 +16,16 @@ func (sb *Sealer) isPledgeRequest(entries int, ps abi.UnpaddedPieceSize) bool {
 	return entries == 0 && ps == 0
 }
 
-func (sb *Sealer) pledgeSectorExists() bool {
-	if PledgeSectorPath == "" || PledgeCidPath == "" {
-		CCPath, ok := os.LookupEnv("CC_SECTOR_PATH")
-		if !ok {
-			panic("CC_SECTOR_PATH not found")
-		}
-		PledgeSectorPath = CCPath + "/sector"
-		PledgeCidPath = CCPath + "/cid"
+func (sb *Sealer) initEnvForPledge() {
+	CCPath, ok := os.LookupEnv("CC_SECTOR_PATH")
+	if !ok {
+		panic("CC_SECTOR_PATH not found")
 	}
+	PledgeSectorPath = CCPath + "/sector"
+	PledgeCidPath = CCPath + "/cid"
+}
 
+func (sb *Sealer) pledgeSectorExists() bool {
 	_, err := os.Stat(PledgeSectorPath)
 	if err != nil {
 		log.Errorf("pledge sector does not exist: %v", err)
