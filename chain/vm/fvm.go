@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"math"
 	"os"
 	"sort"
 	"sync"
@@ -281,7 +282,7 @@ func defaultFVMOpts(ctx context.Context, opts *VMOpts) (*ffi.FVMOpts, error) {
 		BaseCircSupply: circToReport,
 		NetworkVersion: opts.NetworkVersion,
 		StateBase:      opts.StateBase,
-		Tracing:        EnableDetailedTracing,
+		Tracing:        opts.Tracing || EnableDetailedTracing,
 	}, nil
 
 }
@@ -481,6 +482,7 @@ func (vm *FVM) ApplyMessage(ctx context.Context, cmsg types.ChainMsg) (*ApplyRet
 
 func (vm *FVM) ApplyImplicitMessage(ctx context.Context, cmsg *types.Message) (*ApplyRet, error) {
 	start := build.Clock.Now()
+	cmsg.GasLimit = math.MaxInt64 / 2
 	vmMsg := cmsg.VMMessage()
 	msgBytes, err := vmMsg.Serialize()
 	if err != nil {
