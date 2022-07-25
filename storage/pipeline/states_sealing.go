@@ -460,7 +460,7 @@ func (m *Sealing) handlePreCommitWait(ctx statemachine.Context, sector SectorInf
 	mw, err := m.Api.StateWaitMsg(ctx.Context(), *sector.PreCommitMessage, build.MessageConfidence, api.LookbackNoLimit, true)
 	if err != nil {
 		log.Errorf("daemon api connection error: %v", err)
-		return ctx.Send(SectorRetryPreCommit{})
+		return ctx.Send(SectorRetryPreCommitWait{})
 	}
 
 	switch mw.Receipt.ExitCode {
@@ -736,7 +736,7 @@ func (m *Sealing) handleCommitWait(ctx statemachine.Context, sector SectorInfo) 
 	if err != nil {
 		//return ctx.Send(SectorCommitFailed{xerrors.Errorf("failed to wait for porep inclusion: %w", err)})
 		log.Errorf("daemon api connection error: %v", err)
-		return ctx.Send(SectorRetrySubmitCommit{})
+		return ctx.Send(SectorRetryCommitWait{})
 	}
 
 	switch mw.Receipt.ExitCode {
