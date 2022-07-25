@@ -459,7 +459,8 @@ func (m *Sealing) handlePreCommitWait(ctx statemachine.Context, sector SectorInf
 	log.Info("Sector precommitted: ", sector.SectorNumber)
 	mw, err := m.Api.StateWaitMsg(ctx.Context(), *sector.PreCommitMessage, build.MessageConfidence, api.LookbackNoLimit, true)
 	if err != nil {
-		return ctx.Send(SectorChainPreCommitFailed{err})
+		log.Errorf("daemon api connection error: %v", err)
+		return ctx.Send(SectorRetryPreCommit{})
 	}
 
 	switch mw.Receipt.ExitCode {
